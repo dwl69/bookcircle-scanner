@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📚 BFBC Book Scanner</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="script.js" defer></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input, button {
+      font-size: 1.2em;
+      padding: 10px;
+      margin: 12px;
+      width: 80%;
+      max-width: 400px;
+    }
+
+    #reader {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    #scanner-section, #manual-input-section {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 BFBC Book Scanner</h1>
+
+  <!-- SCANNER SECTION -->
+  <div id="scanner-section" style="display: none;">
+    <div id="reader"></div>
+    <button id="startScan">Start Scanning</button>
+  </div>
+
+  <!-- MANUAL INPUT SECTION -->
+  <div id="manual-input-section" style="display: block;">
+    <input type="email" id="email-input" placeholder="Enter your email" />
+    <br />
+    <input type="text" id="manual-isbn" placeholder="Enter ISBN manually" />
+    <br />
+    <button id="manualSubmit">Upload Book</button>
+  </div>
+</body>
+</html>
