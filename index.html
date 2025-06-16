@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BFBC Book Scanner</title>
+  <title>The Book Circle Scanner</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script defer src="script.js"></script>
   <style>
@@ -51,6 +51,14 @@
       margin-top: 15px;
       display: none;
     }
+    input {
+      padding: 10px;
+      width: 90%;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
     .link-note {
       font-size: 0.95em;
       margin-top: 15px;
@@ -61,42 +69,6 @@
     }
     .link-note a:hover {
       text-decoration: underline;
-    }
-    input {
-      padding: 10px;
-      width: 90%;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1em;
-    }
-  </style>
-</head>
-<body>
-  <h1>📚 BFBC Book Scanner</h1>
-
-  <div class="card">
-    <h2>📷 Scan a Book</h2>
-    <input type="email" id="email-input" placeholder="Enter your email" />
-    <button id="scan-button">Camera Scan</button>
-    <div id="scanner"></div>
-    <div class="link-note">
-      Can’t scan? <a href="https://your-softr-site.com/add-book">Add book manually</a>
-    </div>
-  </div>
-</body>
-</html>
-
-    .link-note a:hover {
-      text-decoration: underline;
-    }
-    input {
-      padding: 10px;
-      width: 90%;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1em;
     }
   </style>
 </head>
@@ -109,7 +81,7 @@
     <button id="scan-button">Camera Scan</button>
     <div id="scanner"></div>
     <div class="link-note">
-      Can’t scan? <a href="https://your-softr-site.com/add-book">Add book manually</a>
+      Can’t scan? <a href="#">Add book manually</a>
     </div>
   </div>
 </body>
