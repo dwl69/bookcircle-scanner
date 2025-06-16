@@ -4,9 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const scannerContainer = document.getElementById("scanner-container");
 
   const savedEmail = sessionStorage.getItem("email");
-  if (savedEmail) {
-    emailInput.value = savedEmail;
-  }
+  if (savedEmail) emailInput.value = savedEmail;
 
   scanButton.addEventListener("click", () => {
     const email = emailInput.value.trim();
@@ -14,20 +12,20 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please enter your email before scanning.");
       return;
     }
-
     sessionStorage.setItem("email", email);
     scannerContainer.style.display = "block";
 
-    if (Quagga.initialized) return;
+    if (Quagga.initialized) {
+      Quagga.start();
+      return;
+    }
 
     Quagga.init({
       inputStream: {
         name: "Live",
         type: "LiveStream",
         target: document.querySelector('#scanner'),
-        constraints: {
-          facingMode: "environment"
-        }
+        constraints: { facingMode: "environment" }
       },
       decoder: {
         readers: ["ean_reader"]
@@ -36,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, (err) => {
       if (err) {
         console.error("Quagga init error:", err);
-        alert("Error starting scanner. Try refreshing.");
+        alert("Scanner failed to start.");
         return;
       }
       Quagga.initialized = true;
@@ -45,22 +43,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Quagga.onDetected((data) => {
       const isbn = data.codeResult.code;
-      if (isbn) {
-        Quagga.stop();
-        Quagga.initialized = false;
-        alert(`Scanned ISBN: ${isbn}`);
-        fetch("/.netlify/functions/sendToAlbato", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ isbn, email })
-        })
-        .then(res => res.json())
-        .then(() => alert("Book uploaded successfully!"))
-        .catch(err => {
-          console.error("Upload failed:", err);
-          alert("There was an error uploading the book.");
-        });
+      if (!isbn || isbn.length !== 13 || !isbn.startsWith("978") && !isbn.startsWith("979")) {
+        console.warn("Rejected scan:", isbn);
+        return;
       }
+      Quagga.stop();
+      Quagga.initialized = false;
+      alert(`Scanned ISBN: ${isbn}`);
+      fetch("/.netlify/functions/sendToAlbato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isbn, email })
+      })
+      .then(res => res.json())
+      .then(() => alert("Book uploaded successfully!"))
+      .catch(err => {
+        console.error("Upload failed:", err);
+        alert("There was an error uploading the book.");
+      });
     });
   });
 });
