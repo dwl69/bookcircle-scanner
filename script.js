@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Validated ISBN:", validatedISBN);
         alert(`Successfully scanned ISBN: ${validatedISBN}`);
 
-        fetch("/.netlify/functions/sendToAlbato", {
+        fetch("https://h.albato.com/wh/38/1lfklq4/6IxY60JazgpMLhLjenj7NuhPTtjuBswp1J-oecRZljQ/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ isbn: validatedISBN, email })
