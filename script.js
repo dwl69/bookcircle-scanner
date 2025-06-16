@@ -1,3 +1,13 @@
+function isValidISBN13(isbn) {
+  if (!/^97[89]\d{10}$/.test(isbn)) return false;
+  let sum = 0;
+  for (let i = 0; i < 12; i++) {
+    sum += parseInt(isbn[i]) * (i % 2 === 0 ? 1 : 3);
+  }
+  const checksum = (10 - (sum % 10)) % 10;
+  return checksum === parseInt(isbn[12]);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const emailInput = document.getElementById("email-input");
   const scanButton = document.getElementById("scan-button");
@@ -12,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please enter your email before scanning.");
       return;
     }
+
     sessionStorage.setItem("email", email);
     scannerContainer.style.display = "block";
 
@@ -43,13 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Quagga.onDetected((data) => {
       const isbn = data.codeResult.code;
-      if (!isbn || isbn.length !== 13 || !isbn.startsWith("978") && !isbn.startsWith("979")) {
-        console.warn("Rejected scan:", isbn);
+      if (!isbn || !isValidISBN13(isbn)) {
+        console.warn("Invalid or rejected ISBN:", isbn);
         return;
       }
+
       Quagga.stop();
       Quagga.initialized = false;
       alert(`Scanned ISBN: ${isbn}`);
+
       fetch("/.netlify/functions/sendToAlbato", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
