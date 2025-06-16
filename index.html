@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>The Book Circle Scanner</title>
+  <title>The Book Circle</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script defer src="script.js"></script>
   <style>
@@ -25,6 +25,8 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       padding: 20px;
+      padding-left: 24px;
+      padding-right: 24px;
       max-width: 400px;
       width: 100%;
       margin-bottom: 20px;
@@ -73,10 +75,10 @@
   </style>
 </head>
 <body>
-  <h1>📚 The Book Circle Scanner</h1>
+  <h1>The Book Circle</h1>
 
   <div class="card">
-    <h2>📷 Scan a Book</h2>
+    <h2>Scan a New Book</h2>
     <input type="email" id="email-input" placeholder="Enter your email" />
     <button id="scan-button">Camera Scan</button>
     <div id="scanner"></div>

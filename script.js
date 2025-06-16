@@ -1,3 +1,6 @@
+let scannerInitialized = false;
+let qrScanner;
+
 document.addEventListener("DOMContentLoaded", () => {
   const savedEmail = sessionStorage.getItem("email");
   if (savedEmail) {
@@ -12,9 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     sessionStorage.setItem("email", email);
-    document.getElementById("scanner").style.display = "block";
+    const scannerElement = document.getElementById("scanner");
+    scannerElement.style.display = "block";
 
-    const qrScanner = new Html5Qrcode("scanner");
+    if (!scannerInitialized) {
+      qrScanner = new Html5Qrcode("scanner");
+      scannerInitialized = true;
+    }
+
     qrScanner.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
@@ -28,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(() => {
           alert("Book uploaded successfully!");
           qrScanner.stop();
-          document.getElementById("scanner").style.display = "none";
+          scannerElement.style.display = "none";
         })
         .catch(err => {
           console.error("Upload failed:", err);
