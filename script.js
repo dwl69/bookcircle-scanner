@@ -54,9 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Quagga.onDetected((data) => {
       const isbn = data.codeResult.code;
-      if (!isbn || !isValidISBN13(isbn)) {
-        console.warn("Invalid or rejected ISBN:", isbn);
-        return;
+      console.log("Scanned (raw):", isbn);
+
+      if (!isbn) return;
+
+      if (!isValidISBN13(isbn)) {
+        alert(`Invalid scan: ${isbn}`);
+        return; // Keep scanning for next frame
       }
 
       Quagga.stop();
