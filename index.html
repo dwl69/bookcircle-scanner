@@ -4,13 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>The Book Circle</title>
-  <!-- QuaggaJS for barcode scanning -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
   <script defer src="script.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f8f9fa;
@@ -23,7 +20,6 @@
     h1 {
       font-size: 1.8em;
       margin-bottom: 20px;
-      color: #333;
     }
     .card {
       background: white;
@@ -38,7 +34,6 @@
     .card h2 {
       font-size: 1.3em;
       margin-bottom: 15px;
-      color: #333;
     }
     button {
       padding: 12px 20px;
@@ -48,72 +43,27 @@
       background-color: #007bff;
       color: white;
       cursor: pointer;
-      margin: 5px;
-      transition: background-color 0.3s;
     }
     button:hover {
       background-color: #0056b3;
     }
-    button:disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
-    #scanner {
-      width: 100%;
-      margin-top: 15px;
-      display: none;
-      position: relative;
-      border-radius: 8px;
-      overflow: hidden;
-      background: #000;
-    }
-    #scanner video, #scanner canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    .scanner-overlay {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 2px solid #007bff;
-      border-radius: 4px;
-      width: 80%;
-      height: 60px;
-      pointer-events: none;
-      z-index: 10;
-    }
-    .scanner-overlay::before {
-      content: "Position barcode here";
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 123, 255, 0.9);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 4px;
-      font-size: 0.8em;
-      white-space: nowrap;
-    }
     input {
-      padding: 12px;
+      padding: 10px;
       width: 100%;
       margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 1em;
     }
-    input:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-    }
-    .manual-section {
+    #scanner-container {
       margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid #eee;
+      display: none;
+      width: 100%;
+    }
+    #scanner {
+      width: 100%;
+      border-radius: 8px;
+      overflow: hidden;
     }
     .link-note {
       font-size: 0.95em;
@@ -122,57 +72,34 @@
     .link-note a {
       color: #007bff;
       text-decoration: none;
-      cursor: pointer;
     }
     .link-note a:hover {
       text-decoration: underline;
     }
-    .hidden {
-      display: none;
-    }
-    .help-text {
-      font-size: 0.85em;
-      color: #666;
-      margin-top: 8px;
-      line-height: 1.4;
-    }
-    @media (max-width: 600px) {
-      body {
-        padding: 15px;
-      }
-      .card {
-        padding: 15px 20px;
-      }
-      button {
-        width: 100%;
-        margin: 8px 0;
-      }
+    .tips {
+      margin-top: 20px;
+      font-size: 0.9em;
+      color: #444;
     }
   </style>
 </head>
 <body>
-  <h1>📚 The Book Circle</h1>
+  <h1>The Book Circle</h1>
 
   <div class="card">
     <h2>Scan a New Book</h2>
-    <input type="email" id="email-input" placeholder="Enter your email address" required />
-    <button id="scan-button">📱 Camera Scan</button>
-    
-    <div id="scanner">
-      <div class="scanner-overlay"></div>
+    <input type="email" id="email-input" placeholder="Enter your email" />
+    <button id="scan-button">Camera Scan</button>
+    <div id="scanner-container">
+      <div id="scanner"></div>
     </div>
-    
-    <div class="manual-section">
-      <input type="text" id="manual-isbn" placeholder="Enter ISBN manually (10 or 13 digits)" class="hidden" />
-      <button id="manual-submit" class="hidden">📚 Upload Book</button>
-      <div class="link-note">
-        Can't scan? <a id="manual-toggle">Add book manually</a>
-      </div>
-      <div class="help-text">
-        📖 Hold your phone steady over the barcode<br>
-        💡 Make sure you have good lighting<br>
-        🔍 The barcode should fill most of the blue rectangle
-      </div>
+    <div class="link-note">
+      Can’t scan? <a href="#">Add book manually</a>
+    </div>
+    <div class="tips">
+      📘 Hold your phone steady over the barcode<br/>
+      💡 Make sure you have good lighting<br/>
+      🔍 The barcode should fill most of the blue rectangle
     </div>
   </div>
 </body>

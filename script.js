@@ -1,12 +1,8 @@
-let qrScanner = null;
-let isScanning = false;
-
 document.addEventListener("DOMContentLoaded", () => {
   const emailInput = document.getElementById("email-input");
   const scanButton = document.getElementById("scan-button");
-  const scannerDiv = document.getElementById("scanner");
+  const scannerContainer = document.getElementById("scanner-container");
 
-  // Restore saved email
   const savedEmail = sessionStorage.getItem("email");
   if (savedEmail) {
     emailInput.value = savedEmail;
@@ -20,44 +16,51 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     sessionStorage.setItem("email", email);
-    scannerDiv.style.display = "block";
+    scannerContainer.style.display = "block";
 
-    if (!qrScanner) {
-      qrScanner = new Html5Qrcode("scanner");
-    }
+    if (Quagga.initialized) return;
 
-    if (!isScanning) {
-      isScanning = true;
-      qrScanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          fetch("/.netlify/functions/sendToAlbato", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ isbn: decodedText, email })
-          })
-          .then(res => res.json())
-          .then(() => {
-            alert("Book uploaded successfully!");
-            qrScanner.stop().then(() => {
-              scannerDiv.style.display = "none";
-              isScanning = false;
-            });
-          })
-          .catch(err => {
-            console.error("Upload failed:", err);
-            alert("There was an error uploading the book.");
-          });
-        },
-        (errorMessage) => {
-          console.warn("Scan error:", errorMessage);
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: document.querySelector('#scanner'),
+        constraints: {
+          facingMode: "environment"
         }
-      ).catch(err => {
-        console.error("Scanner start error:", err);
-        alert("Could not start the camera scanner.");
-        isScanning = false;
-      });
-    }
+      },
+      decoder: {
+        readers: ["ean_reader"]
+      },
+      locate: true
+    }, (err) => {
+      if (err) {
+        console.error("Quagga init error:", err);
+        alert("Error starting scanner. Try refreshing.");
+        return;
+      }
+      Quagga.initialized = true;
+      Quagga.start();
+    });
+
+    Quagga.onDetected((data) => {
+      const isbn = data.codeResult.code;
+      if (isbn) {
+        Quagga.stop();
+        Quagga.initialized = false;
+        alert(`Scanned ISBN: ${isbn}`);
+        fetch("/.netlify/functions/sendToAlbato", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ isbn, email })
+        })
+        .then(res => res.json())
+        .then(() => alert("Book uploaded successfully!"))
+        .catch(err => {
+          console.error("Upload failed:", err);
+          alert("There was an error uploading the book.");
+        });
+      }
+    });
   });
 });
